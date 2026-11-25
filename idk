@@ -1,0 +1,26 @@
+const int RED = 10;
+const int YELLOW = 11;
+const int GREEN = 12;
+
+void show(int red, int yellow, int green) {
+  digitalWrite(RED, red);
+  digitalWrite(YELLOW, yellow);
+  digitalWrite(GREEN, green);
+}
+
+void setup() {
+  pinMode(RED, OUTPUT);
+  pinMode(YELLOW, OUTPUT);
+  pinMode(GREEN, OUTPUT);
+}
+
+void loop() {
+  show(HIGH, LOW, LOW);  // Red (stop)
+  delay(5000);
+
+  show(LOW, LOW, HIGH);  // Green (go)
+  delay(5000);
+
+  show(LOW, HIGH, LOW);  // Yellow (slow down)
+  delay(2000);
+}
