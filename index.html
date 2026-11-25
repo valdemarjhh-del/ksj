@@ -1,26 +1,75 @@
-const int RED = 10;
-const int YELLOW = 11;
-const int GREEN = 12;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Light</title>
 
-void show(int red, int yellow, int green) {
-  digitalWrite(RED, red);
-  digitalWrite(YELLOW, yellow);
-  digitalWrite(GREEN, green);
-}
+    <style>
+        body {
+            background-color: #222;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
 
-void setup() {
-  pinMode(RED, OUTPUT);
-  pinMode(YELLOW, OUTPUT);
-  pinMode(GREEN, OUTPUT);
-}
+        .traffic-light {
+            background: #111;
+            padding: 20px;
+            border-radius: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            border: 5px solid #444;
+        }
 
-void loop() {
-  show(HIGH, LOW, LOW);  // Red (stop)
-  delay(5000);
+        .light {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: #333;
+            box-shadow: inset 0 0 10px #000;
+        }
 
-  show(LOW, LOW, HIGH);  // Green (go)
-  delay(5000);
+        .red.active {
+            background: red;
+            box-shadow: 0 0 30px red;
+        }
 
-  show(LOW, HIGH, LOW);  // Yellow (slow down)
-  delay(2000);
-}
+        .yellow.active {
+            background: yellow;
+            box-shadow: 0 0 30px yellow;
+        }
+
+        .green.active {
+            background: lime;
+            box-shadow: 0 0 30px lime;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="traffic-light">
+        <div class="light red" id="red"></div>
+        <div class="light yellow" id="yellow"></div>
+        <div class="light green" id="green"></div>
+    </div>
+
+    <script>
+        const red = document.getElementById("red");
+        const yellow = document.getElementById("yellow");
+        const green = document.getElementById("green");
+
+        function turnOffAll() {
+            red.classList.remove("active");
+            yellow.classList.remove("active");
+            green.classList.remove("active");
+        }
+
+        function trafficLight() {
+            // Red light
+            turnOffAll();
+            red.classList.add("active");
