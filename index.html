@@ -1,76 +1,134 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Traffic Light</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Traffic Light</title>
 
-    <style>
-        body {
-            background: #222;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+<style>
+    body {
+        background: #222;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        color: white;
+    }
 
-        .traffic-light {
-            background: black;
-            padding: 20px;
-            border-radius: 20px;
-        }
+    .traffic-light {
+        background: #111;
+        padding: 20px;
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        border: 4px solid #444;
+    }
 
-        .light {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            margin: 12px;
-            background: #444;
-        }
+    .light {
+        width: 85px;
+        height: 85px;
+        border-radius: 50%;
+        background: #333;
+        border: 3px solid #555;
+    }
 
-        .red.on {
-            background: red;
-            box-shadow: 0 0 30px red;
-        }
+    #red.active {
+        background: red;
+        box-shadow: 0 0 30px red;
+    }
 
-        .yellow.on {
-            background: yellow;
-            box-shadow: 0 0 30px yellow;
-        }
+    #yellow.active {
+        background: yellow;
+        box-shadow: 0 0 30px yellow;
+    }
 
-        .green.on {
-            background: lime;
-            box-shadow: 0 0 30px lime;
-        }
-    </style>
+    #green.active {
+        background: lime;
+        box-shadow: 0 0 30px lime;
+    }
+
+    p {
+        margin-top: 25px;
+        color: #ccc;
+    }
+</style>
 </head>
 
 <body>
 
+<h1>Traffic Light</h1>
+
 <div class="traffic-light">
-    <div class="light red" id="red"></div>
-    <div class="light yellow" id="yellow"></div>
-    <div class="light green" id="green"></div>
+    <div class="light" id="red"></div>
+    <div class="light" id="yellow"></div>
+    <div class="light" id="green"></div>
 </div>
 
+<p>Press SPACE to start / stop</p>
+
 <script>
-    const lights = [
-        document.getElementById("red"),
-        document.getElementById("yellow"),
-        document.getElementById("green")
-    ];
+    let running = false;
+    let timer = null;
 
-    let currentLight = 0;
+    const red = document.getElementById("red");
+    const yellow = document.getElementById("yellow");
+    const green = document.getElementById("green");
 
-    function changeLight() {
-        lights.forEach(light => light.classList.remove("on"));
-
-        lights[currentLight].classList.add("on");
-
-        currentLight = (currentLight + 1) % 3;
+    function turnOff() {
+        red.classList.remove("active");
+        yellow.classList.remove("active");
+        green.classList.remove("active");
     }
 
-    changeLight();
-    setInterval(changeLight, 2000);
+    function startTrafficLight() {
+        let step = 0;
+
+        const sequence = [
+            { light: red, delay: 3000 },
+            { light: yellow, delay: 1000 },
+            { light: green, delay: 3000 },
+            { light: yellow, delay: 1000 }
+        ];
+
+        function nextLight() {
+            if (!running) return;
+
+            turnOff();
+
+            const current = sequence[step];
+            current.light.classList.add("active");
+
+            timer = setTimeout(() => {
+                step = (step + 1) % sequence.length;
+                nextLight();
+            }, current.delay);
+        }
+
+        nextLight();
+    }
+
+    function toggleTrafficLight() {
+        running = !running;
+
+        if (running) {
+            startTrafficLight();
+        } else {
+            clearTimeout(timer);
+            turnOff();
+        }
+    }
+
+    document.addEventListener("keydown", function(event) {
+        if (event.code === "Space" && !event.repeat) {
+            event.preventDefault();
+            toggleTrafficLight();
+        }
+    });
 </script>
 
 </body>
